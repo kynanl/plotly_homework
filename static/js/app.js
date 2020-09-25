@@ -39,14 +39,13 @@ function barPlot(id) {
   console.log(otu_ids)
   let otu_labels = demoInfo.otu_labels;
   console.log(otu_labels);
-  // let topTen = otu_labels.slice(0, 10);
-  // console.log(topTen);
   let sample_values = demoInfo.sample_values;
-  console.log(sample_values)
+  console.log(sample_values);
+
 
   var trace1 = {
     y: otu_ids.slice(0, 10),
-    x: sample_values.slice(0, 10),
+    x: sample_values.slice(0, 10).reverse(),
     type: "bar",
     orientation: "h"
   };
@@ -84,28 +83,50 @@ function subjectDemo(id) {
   };
 };
 
+function bubble(id) {
+  let demoInfo = jsonData.samples.filter(sampleObj => sampleObj.id == id)[0];
+  // let svg = d3.select("#bubble")
+  // let fixBubble = svg.append("svg")
+  test = demoInfo.otu_ids;
+  console.log(demoInfo);
+  let otu_ids = demoInfo.otu_ids;
+  let otu_labels = demoInfo.otu_labels;
+  let sample_values = demoInfo.sample_values;
+  var bubbleLayout = {
+    title: "Bacteria Cultures Per Sample",
+    margin: { t: 0 },
+    hovermode: "closest",
+    xaxis: { title: "OTU ID" },
+    margin: { t: 30 }
+  };
+  var trace1 = {
+    x: otu_ids,
+    y: sample_values,
+    text: otu_labels,
+    mode: 'markers',
+    marker: {
+      color: otu_ids,
+      colorscale: "Earth",
+      size: sample_values
+    }
+  };
+
+  var data = [trace1];
+
+  var layout = {
+    title: 'Belly Button Bubble Chart',
+    showlegend: false,
+    //   // height: 600,
+    //   // width: 600
+  };
+
+  Plotly.newPlot("bubble", data, layout);
+
+};
+//run function embedded in the html
 function optionChanged(id) {
   subjectDemo(id);
-  barPlot(id)
-
+  barPlot(id);
+  bubble(id)
 }
-
-//     function getData(person) {
-//     var dropdownMenu = d3.select("#selDataset");
-//     // Assign the value of the dropdown menu option to a variable
-//     var dataset = dropdownMenu.property("value");
-//     // Initialize an empty array for the person's data
-//     var personaldata = [];
-
-//     if (dataset == '') {
-//       personaldata = sample;
-//     }
-//     else if (dataset == 'uk') {
-//       personaldata = uk;
-//     }
-//     else if (dataset == 'canada') {
-//       data = canada;
-//     }
-//     // Call function to update the chart
-//     updatePlotly(data);
-//   }
+init();
