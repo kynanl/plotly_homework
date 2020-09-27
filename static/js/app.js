@@ -16,19 +16,10 @@ d3.json("./samples.json").then((importedData) => {
   console.log(result)
   let ids = samples.map(d => d.id);
   console.log(ids)
-  // var otu_ids = result.map(d => d.otu_ids);
-  // console.log(otu_ids)
-  // let otu_labels = result.map(d => d.otu_labels);
-  // console.log(otu_labels);
-  // let topTen = otu_labels.slice(0, 10);
-  // console.log(topTen);
-  // let sample_values = result.map(d => d.sample_values);
-  // console.log(sample_values)
   let demoInfo = jsonData.metadata;
   console.log(demoInfo);
-  //barPlot()
+  
   subjectIds(names);
-  //subjectDemo(demoInfo[0]);
   optionChanged(names[0])
 });
 //Create default bar chart
@@ -82,11 +73,9 @@ function subjectDemo(id) {
     person.append(textEntry)
   };
 };
-
+//create function for bubblechart
 function bubble(id) {
   let demoInfo = jsonData.samples.filter(sampleObj => sampleObj.id == id)[0];
-  // let svg = d3.select("#bubble")
-  // let fixBubble = svg.append("svg")
   test = demoInfo.otu_ids;
   console.log(demoInfo);
   let otu_ids = demoInfo.otu_ids;
@@ -116,17 +105,49 @@ function bubble(id) {
   var layout = {
     title: 'Belly Button Bubble Chart',
     showlegend: false,
-    //   // height: 600,
-    //   // width: 600
   };
 
   Plotly.newPlot("bubble", data, layout);
 
 };
+//create function for gague
+
+function gauge(id) {
+  let demoInfo = jsonData.metadata.filter(sampleObj => sampleObj.id == id)[0];
+  let moonValue = demoInfo.wfreq;
+  console.log(moonValue);
+  let gaugeLayout = [{
+    domain: { x: [0, 9], y: [0, 9] },
+    value: moonValue,
+    title: { text: "Belly Button Washing Frequency: Scrubs Per Week" },
+    type: "indicator",
+    mode: "gauge+number",
+    text: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9" ],
+    gauge: {
+      axis: { 'range': [0, 9] },
+      'steps': [
+        { 'range': [0, 2], 'color': "chartreuse"},
+        { 'range': [1, 3], 'color': "chartreuse" },
+        { 'range': [2, 4], 'color': "chartreuse"},
+        { 'range': [3, 5], 'color': "chartreuse" },
+        { 'range': [4, 6], 'color': "chartreuse" },
+        { 'range': [5, 7], 'color': "chartreuse" },
+        { 'range': [6, 8], 'color': "chartreuse" },
+        { 'range': [7, 9], 'color': "chartreuse" },
+        { 'range': [8, 10], 'color': "chartreuse" },
+      ],
+    },
+
+  }];
+  let layout3 = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+  Plotly.newPlot("gauge", gaugeLayout, layout3);
+};
+
 //run function embedded in the html
 function optionChanged(id) {
   subjectDemo(id);
   barPlot(id);
-  bubble(id)
+  bubble(id);
+  gauge(id);
 }
-init();
+//init();
